@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.william.spring_essentials.error.ResourceNotFoundException;
 import br.com.william.spring_essentials.model.Student;
 import br.com.william.spring_essentials.repositorio.StudentRepository;
 
@@ -39,6 +40,7 @@ public class StudentEndPoint {
 //	@RequestMapping(path ="/{id}" ,method = RequestMethod.GET)
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<?> getStudentByID(@PathVariable("id") Long id) {
+		verifyIfStudentExists(id);
 		Student student = dao.findOne(id);
 		return new ResponseEntity<>(student, HttpStatus.OK);
 
@@ -60,6 +62,7 @@ public class StudentEndPoint {
 //	@RequestMapping(method = RequestMethod.DELETE)
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<?> deleteStudent(@PathVariable("id") Long id) {
+		verifyIfStudentExists(id);
 		dao.delete(id);
 
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -69,9 +72,16 @@ public class StudentEndPoint {
 //	@RequestMapping(method = RequestMethod.PUT)
 	@PutMapping
 	public ResponseEntity<?> updateStudent(@RequestBody Student student) {
+		verifyIfStudentExists(student.getId());
 		dao.save(student);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 
+	}
+	private void verifyIfStudentExists(Long id) {
+		Student student = dao.findOne(id);
+		if(student==null)	
+			throw new ResourceNotFoundException("Student not found for ID: "+id);
+		
 	}
 }
