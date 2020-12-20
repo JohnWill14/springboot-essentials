@@ -1,15 +1,8 @@
 package br.com.william.spring_essentials.endpoint;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,44 +10,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.william.spring_essentials.model.Student;
-import br.com.william.spring_essentials.util.DateUtil;
+import br.com.william.spring_essentials.repositorio.StudentRepository;
 
 @RestController // @Controller- controler. @ResponseBody- retornar dados pelo corpo da resposta
 @RequestMapping("/v1/students")
 public class StudentEndPoint {
 
-	private DateUtil dateUtil;
+	private final StudentRepository dao;
 
 	@Autowired
-	public StudentEndPoint(DateUtil dateUtil) {
+	public StudentEndPoint(StudentRepository dao) {
 		super();
-		this.dateUtil = dateUtil;
+		this.dao = dao;
 	}
-
-
-
 
 //	@RequestMapping(method = RequestMethod.GET)
 	@GetMapping
 	private ResponseEntity<?> getListStudent() {
-		System.out.println(dateUtil.formatLocalDateTimeToDataBaseStyle(LocalDateTime.now()));
-		return new ResponseEntity<>(Student.getStudentList(), HttpStatus.OK);
+		return new ResponseEntity<>(dao.findAll(), HttpStatus.OK);
 
 	}
+
 //	@RequestMapping(path ="/{id}" ,method = RequestMethod.GET)
 	@GetMapping(path = "/{id}")
-	private ResponseEntity<?> getStudentByID(@PathVariable("id")int id) {
-		Student student = new Student();
-		student.setId(id);
-		int index = Student.getStudentList().indexOf(student);
-		
-		if(index>=0) student = Student.getStudentList().get(index);
-		else student = null;
+	private ResponseEntity<?> getStudentByID(@PathVariable("id") Long id) {
+		Student student = dao.findOne(id);
 		return new ResponseEntity<>(student, HttpStatus.OK);
 
 	}
@@ -62,25 +45,26 @@ public class StudentEndPoint {
 //	@RequestMapping(method = RequestMethod.POST)
 	@PostMapping
 	private ResponseEntity<?> saveStudent(@RequestBody Student student) {
-		Student.getStudentList().add(student);
-		
+		dao.save(student);
+
 		return new ResponseEntity<>(student, HttpStatus.OK);
 
 	}
+
 //	@RequestMapping(method = RequestMethod.DELETE)
-	@DeleteMapping
-	private ResponseEntity<?> deleteStudent(@RequestBody Student student) {
-		Student.getStudentList().remove(student);
-		
-		return new ResponseEntity<>( HttpStatus.OK);
+	@DeleteMapping(path = "/{id}")
+	private ResponseEntity<?> deleteStudent(@PathVariable("id") Long id) {
+		dao.delete(id);
+
+		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
+
 //	@RequestMapping(method = RequestMethod.PUT)
 	@PutMapping
 	private ResponseEntity<?> updateStudent(@RequestBody Student student) {
-		int index = Student.getStudentList().indexOf(student);
-		if(index >=0)Student.getStudentList().set(index, student);
-		
+		dao.save(student);
+
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
