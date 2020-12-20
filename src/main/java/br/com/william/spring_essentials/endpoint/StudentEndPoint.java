@@ -1,5 +1,7 @@
 package br.com.william.spring_essentials.endpoint;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,31 +31,35 @@ public class StudentEndPoint {
 
 //	@RequestMapping(method = RequestMethod.GET)
 	@GetMapping
-	private ResponseEntity<?> getListStudent() {
+	public ResponseEntity<?> getListStudent() {
 		return new ResponseEntity<>(dao.findAll(), HttpStatus.OK);
 
 	}
 
 //	@RequestMapping(path ="/{id}" ,method = RequestMethod.GET)
 	@GetMapping(path = "/{id}")
-	private ResponseEntity<?> getStudentByID(@PathVariable("id") Long id) {
+	public ResponseEntity<?> getStudentByID(@PathVariable("id") Long id) {
 		Student student = dao.findOne(id);
 		return new ResponseEntity<>(student, HttpStatus.OK);
 
 	}
-
+	@GetMapping(path = "/findByName/{name}")
+	public ResponseEntity<?> findStudentByName(@PathVariable("name") String name){
+		List<Student> listaStudentWithName = dao.findByNameIgnoreCaseContaining(name);
+		return new ResponseEntity<>(listaStudentWithName, HttpStatus.OK);
+	}
 //	@RequestMapping(method = RequestMethod.POST)
 	@PostMapping
-	private ResponseEntity<?> saveStudent(@RequestBody Student student) {
+	public ResponseEntity<?> saveStudent(@RequestBody Student student) {
 		dao.save(student);
 
-		return new ResponseEntity<>(student, HttpStatus.OK);
+		return new ResponseEntity<>(student, HttpStatus.CREATED);
 
 	}
 
 //	@RequestMapping(method = RequestMethod.DELETE)
 	@DeleteMapping(path = "/{id}")
-	private ResponseEntity<?> deleteStudent(@PathVariable("id") Long id) {
+	public ResponseEntity<?> deleteStudent(@PathVariable("id") Long id) {
 		dao.delete(id);
 
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -62,7 +68,7 @@ public class StudentEndPoint {
 
 //	@RequestMapping(method = RequestMethod.PUT)
 	@PutMapping
-	private ResponseEntity<?> updateStudent(@RequestBody Student student) {
+	public ResponseEntity<?> updateStudent(@RequestBody Student student) {
 		dao.save(student);
 
 		return new ResponseEntity<>(HttpStatus.OK);
