@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,8 +35,10 @@ public class StudentEndPoint {
 
 //	@RequestMapping(method = RequestMethod.GET)
 	@GetMapping
-	public ResponseEntity<?> getListStudent() {
-		return new ResponseEntity<>(dao.findAll(), HttpStatus.OK);
+	public ResponseEntity<?> getListStudent(Pageable pg) {
+		//localhost:8080/v1/students?page=3&size=3
+		//localhost:8080/v1/students?sort=camp,asc/desc
+		return new ResponseEntity<>(dao.findAll(pg), HttpStatus.OK);
 
 	}
 
@@ -47,11 +50,13 @@ public class StudentEndPoint {
 		return new ResponseEntity<>(student, HttpStatus.OK);
 
 	}
+
 	@GetMapping(path = "/findByName/{name}")
-	public ResponseEntity<?> findStudentByName(@PathVariable("name") String name){
+	public ResponseEntity<?> findStudentByName(@PathVariable("name") String name) {
 		List<Student> listaStudentWithName = dao.findByNameIgnoreCaseContaining(name);
 		return new ResponseEntity<>(listaStudentWithName, HttpStatus.OK);
 	}
+
 //	@RequestMapping(method = RequestMethod.POST)
 	@PostMapping
 	public ResponseEntity<?> saveStudent(@Valid @RequestBody Student student) {
@@ -80,10 +85,11 @@ public class StudentEndPoint {
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
+
 	private void verifyIfStudentExists(Long id) {
 		Student student = dao.findOne(id);
-		if(student==null)	
-			throw new ResourceNotFoundException("Student not found for ID: "+id);
-		
+		if (student == null)
+			throw new ResourceNotFoundException("Student not found for ID: " + id);
+
 	}
 }
