@@ -2,7 +2,7 @@ package br.com.william.spring_essentials.error.details;
 
 import javax.annotation.Generated;
 
-public class ResourcesNotFoundDetails extends ErrorDetail{
+public class ResourcesNotFoundDetails extends ErrorDetails{
 	
 	
 	

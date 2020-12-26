@@ -2,9 +2,7 @@ package br.com.william.spring_essentials.error.details;
 
 import javax.annotation.Generated;
 
-import br.com.william.spring_essentials.error.details.ResourcesNotFoundDetails.Builder;
-
-public class ValidationErrorDetails extends ErrorDetail {
+public class ValidationErrorDetails extends ErrorDetails {
 	private String field;
 	private String fieldMessage;
 	public ValidationErrorDetails() {
