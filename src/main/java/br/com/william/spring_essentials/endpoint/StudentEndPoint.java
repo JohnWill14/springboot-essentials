@@ -2,6 +2,8 @@ package br.com.william.spring_essentials.endpoint;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.william.spring_essentials.error.ResourceNotFoundException;
+import br.com.william.spring_essentials.error.exception.ResourceNotFoundException;
 import br.com.william.spring_essentials.model.Student;
 import br.com.william.spring_essentials.repositorio.StudentRepository;
 
@@ -52,7 +54,7 @@ public class StudentEndPoint {
 	}
 //	@RequestMapping(method = RequestMethod.POST)
 	@PostMapping
-	public ResponseEntity<?> saveStudent(@RequestBody Student student) {
+	public ResponseEntity<?> saveStudent(@Valid @RequestBody Student student) {
 		dao.save(student);
 
 		return new ResponseEntity<>(student, HttpStatus.CREATED);

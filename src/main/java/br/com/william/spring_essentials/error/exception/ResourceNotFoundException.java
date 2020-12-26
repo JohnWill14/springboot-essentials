@@ -1,4 +1,4 @@
-package br.com.william.spring_essentials.error;
+package br.com.william.spring_essentials.error.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
