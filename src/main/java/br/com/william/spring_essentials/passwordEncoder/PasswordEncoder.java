@@ -17,7 +17,7 @@ public class PasswordEncoder {
 			String codigoDeSeguranca = encoder(sc.next());
 			System.out.println(codigoDeSeguranca);
 		}
-
+		sc.close();
 	}
 
 }
