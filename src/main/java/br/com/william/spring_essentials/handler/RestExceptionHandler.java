@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.com.william.spring_essentials.error.details.ErrorDetails;
 import br.com.william.spring_essentials.error.details.ResourcesNotFoundDetails;
 import br.com.william.spring_essentials.error.details.ValidationErrorDetails;
 import br.com.william.spring_essentials.error.exception.ResourceNotFoundException;
@@ -28,6 +30,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 				.withDeveloperMessage(rnfe.getClass().getName()).build();
 
 		return new ResponseEntity<>(resourcesNotFoundDetails, HttpStatus.NOT_FOUND);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<?> handlerResourceAccessDeniedException(AccessDeniedException ade) {
+		ErrorDetails.BuilderErrorDetails builder = ErrorDetails.builderErrorDetails();
+		ErrorDetails resourcesAccessDeniedErrorDetails = builder.withTimestamp(new Date().getTime())
+				.withSatus(HttpStatus.UNAUTHORIZED.value()).withTitle("Autorização não permitida").withDetail(ade.getMessage())
+				.withDeveloperMessage(ade.getClass().getName()).build();
+
+		return new ResponseEntity<>(resourcesAccessDeniedErrorDetails, HttpStatus.UNAUTHORIZED);
 	}
 
 	@Override
