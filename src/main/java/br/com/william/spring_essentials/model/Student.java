@@ -56,5 +56,10 @@ public class Student extends AbstractEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public String toString() {
+		return "Student [name=" + name + ", email=" + email + ", id=" + id + "]";
+	}
 	
 }
