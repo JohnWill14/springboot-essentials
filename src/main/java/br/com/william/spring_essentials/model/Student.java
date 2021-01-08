@@ -18,7 +18,7 @@ public class Student extends AbstractEntity {
 	private String email;
 	
 	
-	private Student(String name, String email) {
+	public Student(String name, String email) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -39,8 +39,15 @@ public class Student extends AbstractEntity {
 		this(name);
 		this.id = id;
 	}
-
 	
+	
+	public Student(Long id, String name, String email) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.email = email;
+	}
+
 	public String getEmail() {
 		return email;
 	}

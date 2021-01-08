@@ -40,6 +40,7 @@ public class StudentEndPoint {
 	public ResponseEntity<?> getListStudent(Pageable pg) {
 		//localhost:8080/v1/students?page=3&size=3
 		//localhost:8080/v1/students?sort=camp,asc/desc
+//		System.out.println(dao.findAll());
 		return new ResponseEntity<>(dao.findAll(pg), HttpStatus.OK);
 
 	}
